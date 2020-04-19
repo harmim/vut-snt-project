@@ -1,1 +1,5 @@
 /src/*.pyc
+/output/*
+!/output/output-format.pdf
+/doc.pdf
+/xharmi00.tar.gz
