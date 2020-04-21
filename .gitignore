@@ -3,3 +3,6 @@
 !/output/output-format.pdf
 /doc.pdf
 /xharmi00.tar.gz
+/.idea/
+/venv/
+/src/__pycache__/
