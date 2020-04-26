@@ -5,17 +5,24 @@
 #              Traveling Umpire Problem.
 
 from inp import parse_inp_file
+from out import print_solution
+from datetime import datetime
 from numpy import ndarray, arange, tile, where, zeros, int32, unique, roll
 from numpy.random import choice
-from out import print_solution
+
+
+class TimeLimitException(Exception):
+    """ An exception that represents the time limit overrun. """
+    pass
 
 
 class Tup:
     """ A class that represents the Traveling Umpire Problem. """
 
-    PENALTY = 1000  # an implicit value of a penalty
+    PENALTY = 1_000  # implicit value of a penalty
 
-    def __init__(self, inp_file: str, d1: int, d2: int, name: str) -> None:
+    def __init__(self, inp_file: str, d1: int, d2: int, name: str,
+                 time_limit: int) -> None:
         """
         Constructs the Traveling Umpire Problem.
 
@@ -23,19 +30,22 @@ class Tup:
         :param d1: The parameter d1 for 4. constraint.
         :param d2: The parameter d2 for 5. constraint.
         :param name: A name of an instance of the problem.
+        :param time_limit: A time limit of the computation in minutes.
         """
         super().__init__()
 
         self.__name = name
         self.__teams, self.__dist, opp = parse_inp_file(inp_file)
-        self.__umps = self.__teams // 2
+        self.__umps = int(self.__teams / 2)
         self.__schedule = self.__build_schedule(opp)
         self.__rounds = self.__schedule.shape[0]
         self.__q1 = self.umps - d1
-        self.__q2 = self.umps // 2 - d2
+        self.__q2 = int(self.umps / 2) - d2
         self.__penalty = self.umps * self.PENALTY
         self.solution = self.init_solution(self.rounds, self.umps)
         self.__backtracked = [True] + [False] * (self.rounds - 1)
+        self.__time_limit = time_limit
+        self.__time = datetime.now()
 
     @property
     def umps(self) -> int:
@@ -109,6 +119,16 @@ class Tup:
         """
         return self.__backtracked
 
+    def time_limit_check(self) -> None:
+        """
+        Raises an exception if a time limit is exceeded.
+
+        :raises: TimeLimitException if a time limit is exceeded.
+        """
+        duration = (datetime.now() - self.__time).total_seconds() // 60
+        if duration >= self.__time_limit:
+            raise TimeLimitException
+
     @staticmethod
     def __build_schedule(opp: ndarray) -> ndarray:
         """
@@ -118,7 +138,7 @@ class Tup:
         :return: A built schedule matrix of the tournament.
         """
         rounds, teams = opp.shape
-        games = teams // 2
+        games = int(teams / 2)
         schedule_shape = rounds, games
 
         team_indexes = tile(arange(teams), (rounds, 1))
@@ -152,13 +172,19 @@ class Tup:
         """
         Prints the solution.
         """
-        solution = zeros(self.solution.shape, dtype=int32)
+        r = self.rounds - 1
+        constraints = \
+            self.constraint3(self.solution, r) \
+            + self.constraint4(self.solution, r) \
+            + self.constraint5(self.solution, r)
+        feasibility = 'Infeasible' if constraints.sum() else 'Feasible'
+        print(f'\n{feasibility} solution:')
 
+        solution = zeros(self.solution.shape, dtype=int32)
         game_numbers = arange(self.umps) + 1
         game_matrix = tile(game_numbers, (self.rounds, 1))
         for game in game_numbers:
             solution[:, game - 1] = game_matrix[where(self.solution == game)]
-
         print_solution(','.join(map(str, solution.flatten())), self.__name)
 
     def venues_of_umps(self, solution: ndarray, home=True) -> ndarray:
@@ -236,7 +262,7 @@ class Tup:
     def constraint4(self, solution: ndarray, curr_round: int) -> ndarray:
         """
         4. constraint: No umpire is in the same venue more than once in any
-                       q1 consecutive slots.
+                       q1 consecutive rounds.
 
         :param solution: A solution for calculating 4. constraint.
         :param curr_round: A current round.
@@ -263,7 +289,7 @@ class Tup:
     def constraint5(self, solution: ndarray, curr_round: int) -> ndarray:
         """
         5. constraint: No umpire sees a team more than once in any q2
-                       consecutive slots.
+                       consecutive rounds.
 
         :param solution: A solution for calculating 5. constraint.
         :param curr_round: A current round.

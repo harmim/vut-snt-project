@@ -4,10 +4,10 @@
 # Description: Functions for reading and parsing input files.
 
 from os.path import abspath, dirname, exists
-from numpy import ndarray, array
 from re import search, split
+from numpy import ndarray, array
 
-IN_DIR = 'input'  # an input directory
+IN_DIR = 'input'  # input directory
 
 
 def get_inp_file(name: str) -> str:
@@ -20,7 +20,7 @@ def get_inp_file(name: str) -> str:
     """
     global IN_DIR
 
-    file = abspath(dirname(__file__) + '/../{0}/{1}.txt'.format(IN_DIR, name))
+    file = abspath(dirname(__file__) + f'/../{IN_DIR}/{name}.txt')
     if not exists(file):
         raise FileNotFoundError
 
@@ -32,8 +32,8 @@ def parse_inp_file(file: str) -> (int, ndarray, ndarray):
     Parses an input file.
 
     :param file: A name of an input file.
-    :return: A tuple with a number of teams, a distance matrix, and an
-             opponents matrix.
+    :return: A tuple with a number of teams, distance matrix, and opponents
+             matrix.
     """
     teams = 0
     dist = []

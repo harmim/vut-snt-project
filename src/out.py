@@ -6,7 +6,7 @@
 from os import makedirs
 from os.path import abspath, dirname, exists
 
-OUT_DIR = 'output'  # an output directory
+OUT_DIR = 'output'  # output directory
 
 
 def print_solution(solution: str, name: str) -> None:
@@ -18,10 +18,10 @@ def print_solution(solution: str, name: str) -> None:
     """
     global OUT_DIR
 
-    out_dir = abspath(dirname(__file__) + '/../{0}'.format(OUT_DIR))
+    out_dir = abspath(dirname(__file__) + f'/../{OUT_DIR}')
     if not exists(out_dir):
         makedirs(out_dir)
 
-    with open(out_dir + '/{0}.txt'.format(name), 'w') as f:
+    with open(out_dir + f'/{name}.txt', 'w') as f:
         print(solution, file=f)
-    print(solution)
+    print(f'{solution}\n')

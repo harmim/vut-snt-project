@@ -8,14 +8,14 @@ DOC := doc/doc.pdf
 PACK := xharmi00.tar.gz
 VALIDATOR := validator/validator.jar
 
-ARGS := umps4 0 0 30
+ARGS := 0 0 30
 INST := umps4
 PARAMS := 2 1
 
 
 .PHONY: run
 run:
-	python3 $(SRC_DIR)/main.py $(ARGS)
+	python3 $(SRC_DIR)/main.py $(INST) $(ARGS)
 
 
 .PHONY: validate

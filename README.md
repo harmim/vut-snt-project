@@ -17,7 +17,7 @@ Wiley Subscription Services, Inc. 2011. pp. 771-781. doi:10.1002/nav.20482.
 Retrieved from: https://onlinelibrary.wiley.com/doi/abs/10.1002/nav.20482
 
 ## Project Structure
-- `doc/doc.pdf` - the project documentation
+- `doc/doc.pdf` - project documentation
 - `input/` - input datasets
 - `output/` - results of experiments
 - `src/` - source files with a Python implementation
