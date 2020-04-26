@@ -8,20 +8,23 @@ DOC := doc/doc.pdf
 PACK := xharmi00.tar.gz
 VALIDATOR := validator/validator.jar
 
-ARGS := 0 0 30
+D1 := 0
+D2 := 0
+LIMIT := 30
 INST := umps4
-PARAMS := 2 1
+Q1 := 2
+Q2 := 1
 
 
 .PHONY: run
 run:
-	python3 $(SRC_DIR)/main.py $(INST) $(ARGS)
+	python3 $(SRC_DIR)/main.py $(INST) $(D1) $(D2) $(LIMIT)
 
 
 .PHONY: validate
 validate:
-	java -jar $(VALIDATOR) $(IN_DIR)/$(INST).txt $(PARAMS) \
-		$(OUT_DIR)/$(INST).txt
+	java -jar $(VALIDATOR) $(IN_DIR)/$(INST).txt $(Q1) $(Q2) \
+		$(OUT_DIR)/$(INST)-$(Q1)-$(Q2).txt
 
 
 .PHONY: pack

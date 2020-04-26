@@ -185,7 +185,8 @@ class Tup:
         game_matrix = tile(game_numbers, (self.rounds, 1))
         for game in game_numbers:
             solution[:, game - 1] = game_matrix[where(self.solution == game)]
-        print_solution(','.join(map(str, solution.flatten())), self.__name)
+        print_solution(','.join(map(str, solution.flatten())),
+                       self.__name, self.q1, self.q2)
 
     def venues_of_umps(self, solution: ndarray, home=True) -> ndarray:
         """
