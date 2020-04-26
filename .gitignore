@@ -1,8 +1,6 @@
-/src/*.pyc
-/output/*
-!/output/output-format.pdf
+*.pyc
+__pycache__/
 /doc.pdf
 /xharmi00.tar.gz
 /.idea/
 /venv/
-/src/__pycache__/

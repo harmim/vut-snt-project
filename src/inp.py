@@ -1,10 +1,26 @@
+# Project: VUT FIT SNT Project - Traveling Umpire Problem
+# Author: Dominik Harmim <harmim6@gmail.com>
+# Year: 2020
+# Description: Functions for reading and parsing input files.
+
 from os.path import abspath, dirname, exists
 from numpy import ndarray, array
 from re import search, split
 
+IN_DIR = 'input'  # an input directory
+
 
 def get_inp_file(name: str) -> str:
-    file = abspath(dirname(__file__) + '/../input/{0}.txt'.format(name))
+    """
+    Retrieves an input file name with a given problem.
+
+    :param name: A name of an instance of the problem.
+    :return: An input file name with a given problem.
+    :raises: FileNotFoundError if an input file has not been found.
+    """
+    global IN_DIR
+
+    file = abspath(dirname(__file__) + '/../{0}/{1}.txt'.format(IN_DIR, name))
     if not exists(file):
         raise FileNotFoundError
 
@@ -12,13 +28,19 @@ def get_inp_file(name: str) -> str:
 
 
 def parse_inp_file(file: str) -> (int, ndarray, ndarray):
+    """
+    Parses an input file.
+
+    :param file: A name of an input file.
+    :return: A tuple with a number of teams, a distance matrix, and an
+             opponents matrix.
+    """
     teams = 0
     dist = []
     opp = []
 
     match_teams = True
     match_dist = match_opp = False
-
     with open(file) as lines:
         for line in lines:
             if match_teams:
@@ -34,11 +56,8 @@ def parse_inp_file(file: str) -> (int, ndarray, ndarray):
                     s = search(r'\[\s*(.*)\s*\]', line)
                     if s:
                         row = s.group(1).strip()
-                        arr = [int(x) for x in split(r'\s+', row)]
-                        if match_dist:
-                            dist.append(arr)
-                        else:
-                            opp.append(arr)
+                        vals = [int(v) for v in split(r'\s+', row)]
+                        dist.append(vals) if match_dist else opp.append(vals)
 
             elif search(r'dist\s*=\s*\[', line):
                 match_dist = True

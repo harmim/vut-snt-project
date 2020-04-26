@@ -3,26 +3,36 @@
 SRC_DIR := src
 IN_DIR := input
 OUT_DIR := output
-DOC_DIR := DOC
 
-DOC := doc.pdf
+DOC := doc/doc.pdf
 PACK := xharmi00.tar.gz
+VALIDATOR := validator/validator.jar
+
+ARGS := umps4 0 0 30
+INST := umps4
+PARAMS := 2 1
 
 
 .PHONY: run
 run:
+	python3 $(SRC_DIR)/main.py $(ARGS)
+
+
+.PHONY: validate
+validate:
+	java -jar $(VALIDATOR) $(IN_DIR)/$(INST).txt $(PARAMS) \
+		$(OUT_DIR)/$(INST).txt
 
 
 .PHONY: pack
 pack: $(PACK)
 
-$(PACK): Makefile README.md $(SRC_DIR) $(IN_DIR) $(OUT_DIR)
+$(PACK): Makefile README.md requirements.txt $(DOC) $(SRC_DIR) $(IN_DIR) \
+		$(OUT_DIR)
 	make clean
-	cp $(DOC_DIR)/$(DOC) .
-	COPYFILE_DISABLE=1 tar -czf $@ $^ $(DOC)
-	rm $(DOC)
+	COPYFILE_DISABLE=1 tar -czf $@ $^
 
 
 .PHONY: clean
 clean:
-	rm -f $(SRC_DIR)/*.pyc $(OUT_DIR)/*.txt $(DOC) $(PACK)
+	rm -rf $(SRC_DIR)/*.pyc $(SRC_DIR)/__pycache__/ $(PACK)
