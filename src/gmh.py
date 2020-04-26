@@ -69,7 +69,7 @@ def gmh(inp_file: str, d1: int, d2: int, name: str, time_limit: int) -> None:
         constraint_sums = \
             constraint4_sum[game_numbers] + constraint5_sum[game_numbers] \
             + backtrack_constraint_sum[game_numbers]
-        # there is no perfect matching
+        # there is no perfect match
         if constraint_sums.sum():
             # try another initial solution if there is no perfect matching
             # in the first round
@@ -117,11 +117,11 @@ def gmh(inp_file: str, d1: int, d2: int, name: str, time_limit: int) -> None:
 
 def benders_cuts(tup: Tup, r: int) -> list:
     """
-    Calculates the Bender's cuts in a round r.
+    Calculates the Bender's cuts in the round r.
 
     :param tup: The Traveling Umpire Problem instance.
     :param r: A round for which the Bender's cuts will be calculated.
-    :return: The Bender's cuts in a round r.
+    :return: The Bender's cuts in the round r.
     """
     venues = tup.venues_of_umps(tup.solution)
     out_venues = tup.venues_of_umps(tup.solution, home=False)
@@ -162,10 +162,12 @@ def benders_cuts(tup: Tup, r: int) -> list:
                     for j in umps:
                         constraints = []
 
+                        # 4. constraint
                         for x in range(r - tup.q1 + 1, r):
                             if venues[r, i] == venues[x, j]:
                                 constraints.append((venues[x, j], x, j))
 
+                        # 5. constraint
                         for x in range(r - tup.q2 + 1, r):
                             if venues[r, i] == venues[x, j] \
                                     or out_venues[r, i] == out_venues[x, j] \
@@ -252,16 +254,19 @@ def neigh_search(tup: Tup, r: int, cuts: list) -> Tup:
         objective, constraint3, constraints45, violations = \
             neigh_search_objective(tup, solution, r, cuts)
 
+        # updates the solution if the objective is improved
         if objective < prev_objective:
             n = 0
             best_solution = deepcopy(solution)
             prev_objective = objective
 
+        # solution satisfies all conditions
         if not constraints45 and ((cuts and not violations)
                                   or (not cuts and not constraint3)):
             tup.solution = deepcopy(best_solution)
             return tup
 
+        # test iterations limit
         n += 1
         if n == NEIGH_SEARCH_ITERS:
             n = 0

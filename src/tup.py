@@ -189,11 +189,13 @@ class Tup:
 
     def venues_of_umps(self, solution: ndarray, home=True) -> ndarray:
         """
-        Returns either home or out venues of umpires, according to 'home' flag.
+        Returns either home or out venues of umpires, according to the
+        'home' flag.
 
         :param solution: A solution for which the venues are returned.
         :param home: A flag to determine whether return home or out venues.
-        :return: Either home or out venues of umpires, according to 'home' flag.
+        :return: Either home or out venues of umpires, according to the
+                 'home' flag.
         """
         games = self.__schedule[:, :, 0 if home else 1]
         rounds, umps = solution.shape
