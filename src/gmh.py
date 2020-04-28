@@ -2,7 +2,7 @@
 # Author: Dominik Harmim <harmim6@gmail.com>
 # Year: 2020
 # Description: An implementation of the greedy matching heuristic with the
-#              Bender's cuts guided the neighbourhood search.
+#              Benders' cuts guided the neighbourhood search.
 
 from tup import Tup
 from random import randint
@@ -21,8 +21,8 @@ def gmh(inp_file: str, d1: int, d2: int, name: str, time_limit: int) -> None:
     """
     The greedy matching heuristic algorithm. It reads an input instance of the
     Traveling Umpire Problem and produces a solution as optimal as possible. It
-    tries to find a perfect match in every round. It the case that there is no
-    feasible perfect match, the Bender's cuts are used to guide the large
+    tries to find a perfect match in every round. In the case that there is no
+    feasible perfect match, the Benders' cuts are used to guide the large
     neighbourhood search heuristic.
 
     :param inp_file: A name of an input file.
@@ -85,7 +85,7 @@ def gmh(inp_file: str, d1: int, d2: int, name: str, time_limit: int) -> None:
                     tup.penalty * tup.PENALTY
                 continue
 
-            # do the large neighbourhood search with the Bender's cuts
+            # do the large neighbourhood search with the Benders' cuts
             cuts = benders_cuts(tup, r)
             if not cuts:
                 continue
@@ -117,11 +117,11 @@ def gmh(inp_file: str, d1: int, d2: int, name: str, time_limit: int) -> None:
 
 def benders_cuts(tup: Tup, r: int) -> list:
     """
-    Calculates the Bender's cuts in the round r.
+    Calculates the Benders' cuts in the round r.
 
     :param tup: The Traveling Umpire Problem instance.
-    :param r: A round for which the Bender's cuts will be calculated.
-    :return: The Bender's cuts in the round r.
+    :param r: A round for which the Benders' cuts will be calculated.
+    :return: The Benders' cuts in the round r.
     """
     venues = tup.venues_of_umps(tup.solution)
     out_venues = tup.venues_of_umps(tup.solution, home=False)
@@ -145,7 +145,7 @@ def benders_cuts(tup: Tup, r: int) -> list:
                     match[i, j] = 0
                     break
 
-    # find the Bender's cuts for all subsets of umpires
+    # find the Benders' cuts for all subsets of umpires
     cuts = []
     for length in range(1, tup.umps + 1):
         for umps in combinations(range(tup.umps), length):
@@ -178,7 +178,7 @@ def benders_cuts(tup: Tup, r: int) -> list:
                         cut.append(list(set(constraints)))
                 cuts.append(cut)
 
-    # find all permutations of the Bender's cuts
+    # find all permutations of the Benders' cuts
     cut_perms = []
     for cut in cuts:
         umps = []
@@ -199,11 +199,11 @@ def benders_cuts(tup: Tup, r: int) -> list:
 
 def benders_violations(venues: ndarray, cuts: list) -> int:
     """
-    Calculates the number of violated Bender's cuts.
+    Calculates the number of violated Benders' cuts.
 
     :param venues: Home venues of umpires.
-    :param cuts: The Bender's cuts for checking their violation.
-    :return: The number of violated Bender's cuts.
+    :param cuts: The Benders' cuts for checking their violation.
+    :return: The number of violated Benders' cuts.
     """
     violations = len(cuts)
 
@@ -224,13 +224,13 @@ def benders_violations(venues: ndarray, cuts: list) -> int:
 def neigh_search(tup: Tup, r: int, cuts: list) -> Tup:
     """
     The very large neighbourhood search algorithm. It finds (partial) solution
-    that satisfies constraints and all the Bender's cuts.
+    that satisfies constraints and all the Benders' cuts.
 
     :param tup: The Traveling Umpire Problem instance.
     :param r: A current round.
-    :param cuts: The Bender's cuts that should be satisfied.
+    :param cuts: The Benders' cuts that should be satisfied.
     :return: (Partial) solution that satisfies constraints and all the
-             Bender's cuts.
+             Benders' cuts.
     """
     global NEIGH_SEARCH_ITERS, NEIGH_SIZE
 
@@ -283,9 +283,9 @@ def neigh_search_objective(tup: Tup, solution: ndarray, r: int, cuts: list) \
     :param tup: The Traveling Umpire Problem instance.
     :param solution: A solution for the calculation of the objective function.
     :param r: A current round.
-    :param cuts: The Bender's cuts that should be satisfied.
+    :param cuts: The Benders' cuts that should be satisfied.
     :return: A tuple with a value of the objective function, 3. constraint,
-             4. and 5. constraint, and the number of Bender's cuts violations.
+             4. and 5. constraint, and the number of Benders' cuts violations.
     """
     constraint3 = tup.constraint3(solution, r).sum()
     constraints45 = \
